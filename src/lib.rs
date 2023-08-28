@@ -6,7 +6,6 @@ use browser::{
 use crate::browser::ticket::RenderTicket;
 
 pub mod browser;
-pub mod html_processing;
 
 pub struct RenderingEngine {
     browser_container: BrowserContainer,
