@@ -2,14 +2,19 @@
 
 ## Usage 
 ```rust
-...
-// once the application starts
-const TAB_COUNT: usize = 10;
-let engine = Arc::new(RenderingEngine::new(10));
-...
+use std::sync::Arc;
+use parakeet_pdf::{
+    page_props::PagePropertiesBuilder,
+    rendering_engine::RenderingEngine,
+};
 
-...
-// when you want to render a PDF
-let pdf_blob = engine.render_html(&html).await?;
-...
+#[tokio::main]
+async fn main() {
+    const TAB_COUNT: usize = 5;
+    let engine = Arc::new(RenderingEngine::new(TAB_COUNT).unwrap());
+
+    let html = format!("Hello, html!");
+    let page_props = PagePropertiesBuilder::from_size(10.0, 10.0).build();   
+    let _pdf = engine.render_html(&html, page_props).await.unwrap();
+}
 ```
