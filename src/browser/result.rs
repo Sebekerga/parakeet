@@ -1,5 +1,7 @@
+/// Shorthand for `Result<T, browser::result::Error>`.
 pub type Result<T> = std::result::Result<T, Error>;
 
+/// Error type for the browser module
 pub struct Error {
     pub stage: &'static str,
     pub message: String,

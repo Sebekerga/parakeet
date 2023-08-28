@@ -5,16 +5,17 @@ use std::time::Duration;
 use tokio::sync::{Mutex, MutexGuard};
 use tokio::time;
 
+use super::tab::TabContainer;
 use crate::browser::result::{self, Result};
 
-use super::tab::TabContainer;
-
+/// Configuration for the browser
 #[derive(Builder)]
 pub struct BrowserConfiguration {
     pub headless: bool,
     pub tabs_count: usize,
 }
 
+/// A container for a browser, holding browser and tab containers
 pub struct BrowserContainer {
     config: BrowserConfiguration,
 
@@ -25,6 +26,11 @@ pub struct BrowserContainer {
 const WAIT_INTERVAL: u64 = 25;
 
 impl BrowserContainer {
+    /// Create a new BrowserContainer
+    /// # Arguments
+    /// * `config` - Configuration for the browser
+    /// # Returns
+    /// * The new BrowserContainer
     pub fn new(config: BrowserConfiguration) -> Result<BrowserContainer> {
         let browser = launch_browser(&config)?;
         let mut new_container = BrowserContainer {
@@ -38,6 +44,7 @@ impl BrowserContainer {
         Ok(new_container)
     }
 
+    /// Restarts the browser, held by the container
     pub fn restart_browser(&mut self) {
         self.browser = match launch_browser(&self.config) {
             Ok(browser) => browser,
@@ -45,6 +52,7 @@ impl BrowserContainer {
         };
     }
 
+    /// Locks a tab for use
     pub async fn lock_tab(&self) -> MutexGuard<'_, TabContainer> {
         loop {
             for tab in self.tabs.iter() {
@@ -59,6 +67,9 @@ impl BrowserContainer {
         }
     }
 
+    /// Initializes the tabs in the browser, creating the correct number of tabs and tab containers
+    /// # Errors
+    /// * If there is an unexpected error with the browser
     pub fn init_tabs(&mut self) -> Result<()> {
         const STAGE: &str = "init_tabs";
 
@@ -95,6 +106,11 @@ impl BrowserContainer {
     }
 }
 
+/// Launches a browser with the given configuration
+/// # Arguments
+/// * `config` - Configuration for the browser
+/// # Returns
+/// * The new browser
 fn launch_browser(config: &BrowserConfiguration) -> Result<Browser> {
     const STAGE: &str = "launch_browser";
     let launch_options = headless_chrome::LaunchOptions::default_builder()

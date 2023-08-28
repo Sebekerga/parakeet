@@ -7,6 +7,7 @@ pub enum PageMargin {
 }
 
 /// Struct for page properties, passed to the rendering engine
+#[derive(Clone)]
 pub struct PageProperties {
     /// Width of the paper in inches
     pub paper_width: f64,

@@ -2,31 +2,36 @@ use headless_chrome::{types::PrintToPdfOptions, Tab};
 use std::{env, sync::Arc, thread, time::Duration};
 use tokio::time;
 
-use crate::{
-    browser::{
-        result::{self, Result},
-        t_log,
-        ticket::RenderTicket,
-    },
-    page_props::PageProperties,
+use crate::browser::{
+    result::{self, Result},
+    t_log,
+    ticket::RenderTicket,
 };
 
 const WAIT_INTERVAL: u64 = 25;
 
+/// A container for a tab, used to render HTML to PDF
 pub struct TabContainer {
     tab: Arc<Tab>,
 }
 
 impl TabContainer {
+    /// Create a new TabContainer
+    /// # Arguments
+    /// * `tab` - Tab to use
     pub fn new(tab: Arc<Tab>) -> TabContainer {
         TabContainer { tab }
     }
 
-    pub async fn render_html(
-        &mut self,
-        ticket: &RenderTicket,
-        page_properties: PageProperties,
-    ) -> Result<Vec<u8>> {
+    /// Render the given HTML to PDF
+    /// # Arguments
+    /// * `ticket` - Ticket containing the HTML to render
+    /// # Returns
+    /// * Rendered PDF blob
+    /// # Errors
+    /// * If there is an unexpected error with the browser
+    /// * If there is an error saving or retrieving the page to temp
+    pub async fn render_html(&mut self, ticket: &RenderTicket) -> Result<Vec<u8>> {
         const STAGE: &str = "render_html";
 
         t_log::info!(ticket.get_id(), "rendering HTML");
@@ -34,6 +39,7 @@ impl TabContainer {
         let t_id = ticket.get_id();
         let html = ticket.get_html().clone();
         let tab = self.tab.clone();
+        let page_properties = ticket.get_page_properties().clone();
         t_log::debug!(t_id, "navigating to page");
 
         let handle = thread::spawn(move || {
