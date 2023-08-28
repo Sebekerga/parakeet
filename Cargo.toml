@@ -1,6 +1,6 @@
 [package]
 name = "parakeet_pdf"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Maxim Kozlov <kozlov.maxim.m@gmail.com>"]
 description = "Chrome based HTML to PDF renderer"
