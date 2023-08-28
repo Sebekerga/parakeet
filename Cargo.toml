@@ -1,5 +1,5 @@
 [package]
-name = "chrome_html_to_pdf"
+name = "parakeet_pdf"
 version = "0.1.0"
 edition = "2021"
 
