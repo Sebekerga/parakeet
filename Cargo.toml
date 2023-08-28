@@ -2,6 +2,9 @@
 name = "parakeet_pdf"
 version = "0.1.1"
 edition = "2021"
+authors = ["Maxim Kozlov <kozlov.maxim.m@gmail.com>"]
+description = "Chrome based HTML to PDF renderer"
+repository = "https://github.com/serde-rs/serde"
 
 [dependencies]
 derive_builder = "0.12.0"
