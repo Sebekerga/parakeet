@@ -22,6 +22,8 @@ impl TabContainer {
     pub async fn render_html(&mut self, ticket: &RenderTicket) -> Result<Vec<u8>> {
         const STAGE: &str = "render_html";
 
+        t_log::info!(ticket.get_id(), "rendering HTML");
+
         let t_id = ticket.get_id();
         let html = ticket.get_html().clone();
         let tab = self.tab.clone();
@@ -30,7 +32,7 @@ impl TabContainer {
         let handle = thread::spawn(move || {
             t_log::debug!(t_id, "saving page to temp");
             let dir = env::temp_dir();
-            let path = dir.join(&format!("page_{t_id}.html"));
+            let path = dir.join(format!("page_{t_id}.html"));
             std::fs::write(&path, html).map_err(|e| {
                 let err_msg = format!("error saving page to temp: {e:?}");
                 t_log::error!(t_id, "{err_msg}");
@@ -45,7 +47,7 @@ impl TabContainer {
             })?;
 
             t_log::debug!(t_id, "navigating to page");
-            tab.navigate_to(&page_url.to_string()).map_err(|e| {
+            tab.navigate_to(page_url.as_ref()).map_err(|e| {
                 let err_msg = format!("error navigating to page: {e:?}");
                 t_log::error!(t_id, "{err_msg}");
                 result::error!(STAGE, "{err_msg}")
@@ -68,7 +70,7 @@ impl TabContainer {
                     margin_bottom: Some(0.0),
                     margin_left: Some(0.0),
                     margin_right: Some(0.0),
-                    page_ranges: Some(format!("1")),
+                    page_ranges: Some("1".to_string()),
                     ..Default::default()
                 }))
                 .map_err(|e| {
@@ -88,12 +90,10 @@ impl TabContainer {
 
         let t_id = ticket.get_id();
 
-        let resulting_pdf = handle.join().map_err(|e| {
+        handle.join().map_err(|e| {
             let err_msg = format!("error joining thread: {e:?}");
             t_log::error!(t_id, "{err_msg}");
             result::error!(STAGE, "{err_msg}")
-        })?;
-
-        resulting_pdf
+        })?
     }
 }
