@@ -3,10 +3,10 @@ use browser::{
     containers::browser::{BrowserConfigurationBuilder, BrowserContainer},
     result::Result,
 };
-use page_params::PageProperties;
+use page_props::PageProperties;
 
 pub mod browser;
-pub mod page_params;
+pub mod page_props;
 
 /// Main interface for rendering HTML to PDF
 pub struct RenderingEngine {

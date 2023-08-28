@@ -8,7 +8,7 @@ use crate::{
         t_log,
         ticket::RenderTicket,
     },
-    page_params::PageProperties,
+    page_props::PageProperties,
 };
 
 const WAIT_INTERVAL: u64 = 25;
