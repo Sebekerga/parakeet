@@ -77,7 +77,6 @@ impl TabContainer {
                     margin_bottom: Some(page_properties.margin_bottom),
                     margin_left: Some(page_properties.margin_left),
                     margin_right: Some(page_properties.margin_right),
-                    page_ranges: Some("1".to_string()),
                     ..Default::default()
                 }))
                 .map_err(|e| {
