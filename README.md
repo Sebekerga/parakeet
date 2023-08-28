@@ -1,4 +1,4 @@
-**parakeet** provides an easy to use wrapper around [headless_chrome](https://docs.rs/headless_chrome) that allows an asynchronous function for PDF rendering. This is useful for rendering PDFs in a web server, as launching is slow, therefore should be done once. It controls many tabs at once, giving you the ability to render multiple PDFs at once.
+**parakeet** provides an easy to use wrapper around [headless_chrome](https://docs.rs/headless_chrome) that provides an asynchronous function for PDF rendering of HTML documents. This is useful for rendering PDFs in a web server, as launching is slow, therefore should be done once. It controls many tabs at once, thus giving ability to render multiple PDFs at once.
 
 ## Usage 
 ```rust
