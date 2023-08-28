@@ -1,3 +1,8 @@
+//! **parakeet** provides an easy to use wrapper around [headless_chrome](https://docs.rs/headless_chrome)
+//! that provides an asynchronous function for PDF rendering. This is useful for rendering PDFs in a web server,
+//! as launching is slow, therefore should be done once. It controls many tabs at once, giving you the ability
+//! to render multiple PDFs at once.
+//!
 use crate::browser::{result, ticket::RenderTicket};
 use browser::{
     containers::browser::{BrowserConfigurationBuilder, BrowserContainer},
