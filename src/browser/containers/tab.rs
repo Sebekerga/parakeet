@@ -2,10 +2,13 @@ use headless_chrome::{types::PrintToPdfOptions, Tab};
 use std::{env, sync::Arc, thread, time::Duration};
 use tokio::time;
 
-use crate::browser::{
-    result::{self, Result},
-    t_log,
-    ticket::RenderTicket,
+use crate::{
+    browser::{
+        result::{self, Result},
+        t_log,
+        ticket::RenderTicket,
+    },
+    page_params::PageProperties,
 };
 
 const WAIT_INTERVAL: u64 = 25;
@@ -19,7 +22,11 @@ impl TabContainer {
         TabContainer { tab }
     }
 
-    pub async fn render_html(&mut self, ticket: &RenderTicket) -> Result<Vec<u8>> {
+    pub async fn render_html(
+        &mut self,
+        ticket: &RenderTicket,
+        page_properties: PageProperties,
+    ) -> Result<Vec<u8>> {
         const STAGE: &str = "render_html";
 
         t_log::info!(ticket.get_id(), "rendering HTML");
@@ -64,12 +71,12 @@ impl TabContainer {
                     display_header_footer: Some(false),
                     print_background: Some(true),
                     scale: Some(1.0),
-                    paper_width: Some(8.3),
-                    paper_height: Some(11.7),
-                    margin_top: Some(0.0),
-                    margin_bottom: Some(0.0),
-                    margin_left: Some(0.0),
-                    margin_right: Some(0.0),
+                    paper_width: Some(page_properties.paper_width),
+                    paper_height: Some(page_properties.paper_height),
+                    margin_top: Some(page_properties.margin_top),
+                    margin_bottom: Some(page_properties.margin_bottom),
+                    margin_left: Some(page_properties.margin_left),
+                    margin_right: Some(page_properties.margin_right),
                     page_ranges: Some("1".to_string()),
                     ..Default::default()
                 }))
