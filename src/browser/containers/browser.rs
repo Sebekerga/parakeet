@@ -86,17 +86,17 @@ impl BrowserContainer {
 
         log::debug!("opening tabs");
         while tabs_count()? < self.config.tabs_count {
-            self.browser
-                .new_tab()
-                .map_err(|err| result::error!(STAGE, "error when creating tabs: {err:?}"))?;
+            self.browser.new_tab().map_err(|err| {
+                result::error!(STAGE, "error when creating tabs: {err:?}")
+            })?;
         }
 
         // creating tab containers
         log::debug!("initializing tab containers");
         let tabs_binding = self.browser.get_tabs().clone();
-        let tabs = tabs_binding
-            .lock()
-            .map_err(|err| result::error!(STAGE, "error when creating tab containers: {err:?}"))?;
+        let tabs = tabs_binding.lock().map_err(|err| {
+            result::error!(STAGE, "error when creating tab containers: {err:?}")
+        })?;
         for tab in tabs.iter() {
             self.tabs
                 .push(Arc::new(Mutex::new(TabContainer::new(tab.clone()))));
