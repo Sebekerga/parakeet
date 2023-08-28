@@ -25,7 +25,7 @@ impl std::fmt::Debug for Error {
 
 macro_rules! error {
     ($stage:expr, $($arg:tt)*) => {
-        Error {
+        crate::browser::result::Error {
             stage: $stage,
             message: format!($($arg)*),
         }

@@ -1,12 +1,12 @@
+use derive_builder::Builder;
+use headless_chrome::Browser;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::sync::{Mutex, MutexGuard};
-
-use derive_builder::Builder;
-use headless_chrome::Browser;
 use tokio::time;
 
-use super::result::{self, Error, Result};
+use crate::browser::result::{self, Result};
+
 use super::tab::TabContainer;
 
 #[derive(Builder)]
@@ -41,7 +41,7 @@ impl BrowserContainer {
     pub fn restart_browser(&mut self) {
         self.browser = match launch_browser(&self.config) {
             Ok(browser) => browser,
-            Err(err) => panic!("Error creating browser: {}", err),
+            Err(err) => panic!("error creating browser: {}", err),
         };
     }
 
@@ -96,20 +96,16 @@ impl BrowserContainer {
 }
 
 fn launch_browser(config: &BrowserConfiguration) -> Result<Browser> {
+    const STAGE: &str = "launch_browser";
     let launch_options = headless_chrome::LaunchOptions::default_builder()
         .headless(config.headless)
         .idle_browser_timeout(std::time::Duration::from_secs(3600))
         .port(Some(39625))
         .build()
-        .map_err(|err| Error {
-            stage: "launch_browser",
-            message: format!("Error creating launch options: {}", err),
-        })?;
+        .map_err(|err| result::error!(STAGE, "error creating launch options: {err}"))?;
 
-    let browser = Browser::new(launch_options).map_err(|err| Error {
-        stage: "launch_browser",
-        message: format!("Error creating browser: {}", err),
-    })?;
+    let browser = Browser::new(launch_options)
+        .map_err(|err| result::error!(STAGE, "error creating browser: {err}"))?;
 
     Ok(browser)
 }

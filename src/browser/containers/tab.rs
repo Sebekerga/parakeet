@@ -2,12 +2,10 @@ use headless_chrome::{types::PrintToPdfOptions, Tab};
 use std::{env, sync::Arc, thread, time::Duration};
 use tokio::time;
 
-use super::{
+use crate::browser::{
+    result::{self, Result},
+    t_log,
     ticket::RenderTicket,
-    utils::{
-        result::{self, Error, Result},
-        t_log,
-    },
 };
 
 const WAIT_INTERVAL: u64 = 25;
@@ -91,11 +89,9 @@ impl TabContainer {
         let t_id = ticket.get_id();
 
         let resulting_pdf = handle.join().map_err(|e| {
-            t_log::error!(t_id, "error joining thread: {e:?}");
-            Error {
-                stage: "render_html",
-                message: format!("error joining thread: {e:?}"),
-            }
+            let err_msg = format!("error joining thread: {e:?}");
+            t_log::error!(t_id, "{err_msg}");
+            result::error!(STAGE, "{err_msg}")
         })?;
 
         resulting_pdf

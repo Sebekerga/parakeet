@@ -21,7 +21,7 @@ impl RenderTicket {
             .collect();
         let id = match id.try_into() {
             Ok(id) => id,
-            Err(_) => panic!("Error converting id to array"),
+            Err(_) => panic!("error converting id to array"),
         };
         RenderTicket {
             id,
